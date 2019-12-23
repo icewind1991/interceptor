@@ -5,12 +5,19 @@ cache:
     - $HOME/.composer/cache
 
 language: php
-php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
+jobs:
+  include:
+    - php: 5.4
+      dist: trusty
+    - php: 5.5
+      dist: trusty
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4
+    - php: hhvm
 
 matrix:
   allow_failures:
@@ -25,8 +32,8 @@ install:
 
 script:
   - cd tests
-  - phpunit --configuration phpunit.xml
+  - ../vendor/bin/phpunit --configuration phpunit.xml
 
   # Create coverage report
-  - sh -c "if [ "$TRAVIS_PHP_VERSION" != "7.0" ] && [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
-  - sh -c "if [ "$TRAVIS_PHP_VERSION" != "7.0" ] && [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
+  - sh -c "if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
+  - sh -c "if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
